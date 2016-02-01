@@ -1,0 +1,71 @@
+//
+   Created by agescura on 5/11/15.
+
+extends ../layout
+
+block content
+    // Start content
+    .content
+        .container
+
+            h1 #{structure.name}
+            .panel.panel-default.panel-fill
+                .panel-heading
+                    h3.panel-title General Information
+                .panel-body
+                    .about-info-p
+                        strong Name: #{structure.name}
+                    .about-info-p
+                        strong Contact: #{structure.contact}
+                    .about-info-p
+                        strong Description: #{structure.description}
+
+                .panel-body
+                    .panel.panel-default.panel-fill
+                        .panel-heading
+                            h3.panel-title Fields
+                        .panel-body
+                            if structure.fields
+                                each field in structure.fields
+                                    each value, key in field
+                                        .about-info-p
+                                            strong #{key}
+                                            p.text-muted Type #{value.type}
+                                            p.text-muted Required #{value.required}
+                                            p.text-muted Description #{value.description}
+                                            a.btn.btn-default(href='/structures/#{structure.name}/#{key}/delete') Delete #{key}
+                            else
+                                p There are no fields in structure.
+                        .panel-body
+                            p Add Field
+                            form(method='post', action='/structures/' + structure.name +'/create', enctype='multipart/form-data')
+                                .form-group
+                                    label Name Field
+                                    input.form-control(name='name', type='text', required='')
+                                .form-group
+                                    label Type Field
+                                    select.form-control(name='type')
+                                        option(value='text') text
+                                        option(value='number') Number
+                                        option(value='url') Url
+                                        option(value='file') File Upload
+                                        option(value='point') Point
+                                        option(value='line') LineString
+                                        option(value='polygon') Polygon
+                                .form-group
+                                    label Required
+                                    input.form-control(name='required', type='checkbox')
+                                .form-group
+                                    label Description
+                                    input.form-control(name='description', type='text', required='')
+                                input.btn.btn-default(name='submit', type='submit', value='Add Field')
+                        .panel-body
+                            h4 Remove #{structure.name} Structure
+                            a.btn.btn-default(href='/structures/#{structure.name}/delete') Delete #{structure.name}
+                        .panel-body
+                            h4 Import JSON
+                            form(method='post', action='/structures/' + structure.name + '/import', enctype='multipart/form-data')
+                                .form-group
+                                    label url JSON
+                                    input.form-control(name='url', type='url', require='require')
+                                input.btn.btn-default(name='submit', type='submit', value='Import Url JSON')

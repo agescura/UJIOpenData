@@ -1,0 +1,159 @@
+//
+   Created by agescura on 18/1/16.
+
+extends ../layout
+
+block css
+    link(rel='stylesheet', href='/assets/magnific-popup/magnific-popup.css')
+    link(rel='stylesheet', href='/assets/jquery-datatables-editable/datatables.css')
+    link(rel='stylesheet', href='/bower_components/leaflet/dist/leaflet.css')
+    link(rel='stylesheet', href='/bower_components/leaflet-draw/dist/leaflet.draw.css')
+
+block js
+    script(src='/assets/magnific-popup/magnific-popup.js')
+    script(src='/assets/jquery-datatables-editable/jquery.dataTables.js')
+    script(src='/assets/datatables/dataTables.bootstrap.js')
+    script(src='/assets/jquery-datatables-editable/datatables.editable.init.js')
+    script(src='/bower_components/angular/angular.min.js')
+    script(src='/bower_components/leaflet/dist/leaflet.js')
+    script(src='/bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js')
+    script(src='/bower_components/leaflet-draw/dist/leaflet.draw.js')
+    script(src='/bower_components/turf/turf.js')
+    script.
+        var app = angular.module("demoapp", ['leaflet-directive']);
+        app.controller("LeafletController", ["$scope", function ($scope) {
+            angular.extend($scope, {
+                defaults: {
+                    maxZoom: 18,
+                    minZoom: 0,
+                    scrollWheelZoom: false
+                },
+                center: {
+                    lat: #{structure.center.lat},
+                    lng: #{structure.center.lng},
+                    zoom: #{structure.center.zoom}
+                },
+                geoJSON: 'No geoJSON selected'
+            });
+        }]);
+
+        var structure = !{JSON.stringify(structure)}
+        if (structure.fields.length) {
+            for (var i = 0; i < structure.fields.length; i++) {
+                var name = Object.keys(structure.fields[i])[0];
+                switch (structure.fields[i][name]["type"]) {
+                    case "point":
+                        my_map_draw(name, "point");
+                        break;
+                    case "line":
+                        my_map_draw(name, "line");
+                        break;
+                    case "polygon":
+                        my_map_draw(name, "polygon");
+                        break;
+                }
+            }
+        }
+
+        function my_map_draw(id, type) {
+            var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib}),
+                    map = new L.Map(id, {layers: [osm], center: new L.LatLng(-37.7772, 175.2756), zoom: 15});
+            var drawnItems = new L.FeatureGroup();
+            map.addLayer(drawnItems);
+
+            switch (type) {
+                case "point":
+                    map.addControl(new L.Control.Draw({
+                        position: 'topright',
+                        draw: {
+                            polyline: false,
+                            polygon: false,
+                            rectangle: false,
+                            circle: false,
+                            marker: true
+                        },
+                        edit: {featureGroup: drawnItems}
+                    }));
+                    break;
+                case "line":
+                    map.addControl(new L.Control.Draw({
+                        position: 'topright',
+                        draw: {
+                            polyline: true,
+                            polygon: false,
+                            rectangle: false,
+                            circle: false,
+                            marker: false
+                        },
+                        edit: {featureGroup: drawnItems}
+                    }));
+                    break;
+                case "polygon":
+                    map.addControl(new L.Control.Draw({
+                        position: 'topright',
+                        draw: {
+                            polyline: false,
+                            polygon: true,
+                            rectangle: false,
+                            circle: false,
+                            marker: false
+                        },
+                        edit: {featureGroup: drawnItems}
+                    }));
+                    break;
+            }
+
+            map.on('draw:created', function (event) {
+                var layer = event.layer;
+                if (drawnItems && drawnItems.getLayers().length !== 0) {
+                    drawnItems.clearLayers();
+                }
+                drawnItems.addLayer(layer);
+                console.log(name + "Label");
+                document.getElementById(name + "Label").value = JSON.stringify(layer.toGeoJSON());
+
+            });
+        }
+block content
+    // Start content
+    .content
+        .container
+            // Page-Title
+            .row
+                .col-sm-12
+                    .panel.panel-default
+                        .panel-heading
+                            h2.page-title Edit #{dataset._id} Value
+                            h3.page-title Dataset Name: #{structure.name}
+
+                        .panel-body
+                            form.cmxform.form-horizontal.tasi-form(method='post', action='/datasets/#{dataset.name}/#{dataset._id}/edit', enctype='multipart/form-data')
+                                if structure.fields
+                                    each field in structure.fields
+                                        each value, key in field
+                                            - var candidate = key
+                                            each value, key in dataset
+                                                if candidate == key
+                                                    - resultado = value
+                                            .form-group
+                                                if value.required
+                                                    label.col-lg-10 #{key} (Required)
+                                                else
+                                                    label.col-lg-10 #{key} (Not required)
+                                                .col-lg-10
+                                                    if value.type == 'text'
+                                                        input.form-control(name='#{key}', type='text', require='', value='#{resultado}')
+                                                    if value.type == 'number'
+                                                        input.form-control(name='#{key}', type='number', require='', value='#{resultado}')
+                                                    if value.type == 'url'
+                                                        input.form-control(name='#{key}', type='url', require='', value='#{resultado}')
+                                                    if value.type == 'file'
+                                                        input.form-control(name='#{key}', type='file', require='')
+                                                    if value.type == 'point' || value.type == 'line' || value.type == 'polygon'
+                                                        input.form-control(id='#{key}Label', name='#{key}Label', type='text', require='', value='#{resultado}')
+                                                        .col-sm-10
+                                                            div(id='#{key}', style='width: 800px; height: 600px; border: 1px solid #ccc')
+                                .col-lg-offset-2.col-lg-10
+                                    input.btn.btn-default(name='submit', type='submit', value='Edit Row')

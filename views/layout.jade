@@ -1,0 +1,240 @@
+doctype html
+html(ng-app='demoapp')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='description', content='A fully featured admin theme which can be used to build CRM, CMS, etc.')
+    meta(name='author', content='Coderthemes')
+    link(rel='shortcut icon', href='/images/favicon_1.ico')
+    title Open Data - A new approach to transparency
+    // Base Css Files
+    link(href='/css/bootstrap.min.css', rel='stylesheet')
+    // Font Icons
+    link(href='/assets/font-awesome/css/font-awesome.min.css', rel='stylesheet')
+    link(href='/assets/ionicon/css/ionicons.min.css', rel='stylesheet')
+    link(href='/css/material-design-iconic-font.min.css', rel='stylesheet')
+    // animate css
+    link(href='/css/animate.css', rel='stylesheet')
+    // Waves-effect
+    link(href='/css/waves-effect.css', rel='stylesheet')
+    // Custom Files
+    link(href='/css/helper.css', rel='stylesheet', type='text/css')
+    link(href='/css/style.css', rel='stylesheet', type='text/css')
+
+    block css
+
+    // HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
+    // WARNING: Respond.js doesn't work if you view the page via file://
+    //if lt IE 9
+      script(src='https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js')
+      script(src='https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js')
+    script(src='/js/modernizr.min.js')
+
+  body.fixed-left(ng-controller='LeafletController')
+    // Begin page
+    #wrapper
+      // Top Bar Start
+      .topbar
+        // LOGO
+        .topbar-left
+          .text-center
+            a.logo(href='/')
+              i.md.md-terrain
+              span Open Data
+        // Button mobile view to collapse sidebar menu
+        .navbar.navbar-default(role='navigation')
+          .container
+            div
+              .pull-left
+                button.button-menu-mobile.open-left
+                  i.fa.fa-bars
+                span.clearfix
+              ul.nav.navbar-nav.navbar-right.pull-right
+                li.dropdown
+                  a.dropdown-toggle.profile(href='', data-toggle='dropdown', aria-expanded='true')
+                    img.img-circle(src='/uploads/noimage.png', alt='user-img')
+                  ul.dropdown-menu
+                    li
+                      a(href='javascript:void(0)')
+                        i.md.md-face-unlock
+                        |  Profile
+                    li
+                      a(href='/settings')
+                        i.md.md-settings
+                        |  Settings
+                    li
+                      a(href='javascript:void(0)')
+                        i.md.md-settings-power
+                        |  Logout
+            // /.nav-collapse
+      // Top Bar End
+      // ========== Left Sidebar Start ==========
+      .left.side-menu
+        .sidebar-inner.slimscrollleft
+          .user-details
+            .pull-left
+              img.thumb-md.img-circle(src='/uploads/noimage.png', alt='')
+            .user-info
+              .dropdown
+                a.dropdown-toggle(href='#', data-toggle='dropdown', aria-expanded='false')
+                  | Albert
+                  span.caret
+                ul.dropdown-menu
+                  li
+                    a(href='javascript:void(0)')
+                      i.md.md-face-unlock
+                      |  Profile
+                      .ripple-wrapper
+                  li
+                    a(href='/settings')
+                      i.md.md-settings
+                      |  Settings
+                  li
+                    a(href='javascript:void(0)')
+                      i.md.md-settings-power
+                      |  Logout
+              p.text-muted.m-0 Administrator
+          // - Divider
+          #sidebar-menu
+            ul
+              li
+                a.waves-effect(href='index.html')
+                  i.md.md-home
+                  span  Dashboard
+              li.has_sub
+                a.waves-effect(href='#')
+                  i.md.md-mail
+                  span  Users
+                  span.pull-right
+                    i.md.md-add
+                ul.list-unstyled
+                  li
+                    a(href='inbox.html') Inbox
+                  li
+                    a(href='email-compose.html') Compose Mail
+                  li
+                    a(href='email-read.html') View Mail
+              li
+                a.waves-effect(href='/settings')
+                  i.md.md-event
+                  span  Settings
+              li
+                a.waves-effect(href='/structures')
+                  i.md.md-event
+                  span  Structures
+              li
+                a.waves-effect(href='/settings')
+                  i.md.md-event
+                  span  Datasets
+            .clearfix
+          .clearfix
+      // Left Sidebar End
+      // ==============================================================
+      // Start right Content here
+      // ==============================================================
+      .content-page
+        != messages()
+        block content
+
+        div(style='height:600px;')
+
+        footer.footer.text-right
+          | 2015 © Moltran.
+      // ==============================================================
+      // End Right content here
+      // ==============================================================
+      // Right Sidebar
+      .side-bar.right-bar.nicescroll
+        h4.text-center Chat
+        .contact-list.nicescroll
+          ul.list-group.contacts-list
+            li.list-group-item
+              a(href='#')
+                .avatar
+                  img(src='/images/users/avatar-1.jpg', alt='')
+                span.name Chadengle
+                i.fa.fa-circle.online
+              span.clearfix
+            li.list-group-item
+              a(href='#')
+                .avatar
+                  img(src='/images/users/avatar-2.jpg', alt='')
+                span.name Tomaslau
+                i.fa.fa-circle.online
+              span.clearfix
+            li.list-group-item
+              a(href='#')
+                .avatar
+                  img(src='/images/users/avatar-3.jpg', alt='')
+                span.name Stillnotdavid
+                i.fa.fa-circle.online
+              span.clearfix
+            li.list-group-item
+              a(href='#')
+                .avatar
+                  img(src='/images/users/avatar-4.jpg', alt='')
+                span.name Kurafire
+                i.fa.fa-circle.online
+              span.clearfix
+            li.list-group-item
+              a(href='#')
+                .avatar
+                  img(src='/images/users/avatar-5.jpg', alt='')
+                span.name Shahedk
+                i.fa.fa-circle.away
+              span.clearfix
+            li.list-group-item
+              a(href='#')
+                .avatar
+                  img(src='/images/users/avatar-6.jpg', alt='')
+                span.name Adhamdannaway
+                i.fa.fa-circle.away
+              span.clearfix
+            li.list-group-item
+              a(href='#')
+                .avatar
+                  img(src='/images/users/avatar-7.jpg', alt='')
+                span.name Ok
+                i.fa.fa-circle.away
+              span.clearfix
+            li.list-group-item
+              a(href='#')
+                .avatar
+                  img(src='/images/users/avatar-8.jpg', alt='')
+                span.name Arashasghari
+                i.fa.fa-circle.offline
+              span.clearfix
+            li.list-group-item
+              a(href='#')
+                .avatar
+                  img(src='/images/users/avatar-9.jpg', alt='')
+                span.name Joshaustin
+                i.fa.fa-circle.offline
+              span.clearfix
+            li.list-group-item
+              a(href='#')
+                .avatar
+                  img(src='/images/users/avatar-10.jpg', alt='')
+                span.name Sortino
+                i.fa.fa-circle.offline
+              span.clearfix
+      // /Right-bar
+    // END wrapper
+    script.
+      var resizefunc = [];
+    // jQuery
+    script(src='/js/jquery.min.js')
+    script(src='/js/bootstrap.min.js')
+    script(src='/js/waves.js')
+    script(src='/js/wow.min.js')
+    script(src='/js/jquery.nicescroll.js', type='text/javascript')
+    script(src='/js/jquery.scrollTo.min.js')
+    script(src='/assets/jquery-detectmobile/detect.js')
+    script(src='/assets/fastclick/fastclick.js')
+    script(src='/assets/jquery-slimscroll/jquery.slimscroll.js')
+    script(src='/assets/jquery-blockui/jquery.blockUI.js')
+    // CUSTOM JS
+    script(src='/js/jquery.app.js')
+
+    block js
+

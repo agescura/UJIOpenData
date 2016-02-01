@@ -1,0 +1,223 @@
+//
+   Created by agescura on 5/11/15.
+
+extends ../layout
+
+block css
+    link(rel='stylesheet', href='/assets/magnific-popup/magnific-popup.css')
+    link(rel='stylesheet', href='/assets/jquery-datatables-editable/datatables.css')
+    link(rel='stylesheet', href='/bower_components/leaflet/dist/leaflet.css')
+    link(rel='stylesheet', href='/bower_components/leaflet-draw/dist/leaflet.draw.css')
+
+block js
+    script(src='/assets/magnific-popup/magnific-popup.js')
+    script(src='/assets/jquery-datatables-editable/jquery.dataTables.js')
+    script(src='/assets/datatables/dataTables.bootstrap.js')
+    script(src='/assets/jquery-datatables-editable/datatables.editable.init.js')
+    script(src='/bower_components/angular/angular.min.js')
+    script(src='/bower_components/leaflet/dist/leaflet.js')
+    script(src='/bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js')
+    script(src='/bower_components/leaflet-draw/dist/leaflet.draw.js')
+    script(src='/bower_components/turf/turf.js')
+    script.
+        var app = angular.module("demoapp", ['leaflet-directive']);
+        app.controller("LeafletController", ['$scope', '$http', 'leafletData', function ($scope, $http, leafletData) {
+            angular.extend($scope, {
+                defaults: {
+                    maxZoom: 18,
+                    minZoom: 0,
+                    scrollWheelZoom: false
+                },
+               center: {
+                   lat: #{structure.center.lat},
+                   lng: #{structure.center.lng},
+                   zoom: #{structure.center.zoom}
+               },
+                geojson: {
+                    data: {},
+                    style: {
+                        fillColor: "green",
+                        weight: 2,
+                        opacity: 1,
+                        color: 'white',
+                        dashArray: '3',
+                        fillOpacity: 0.7
+                    }
+                }
+            });
+            var geographicType = 'undefined';
+
+            var structure = !{JSON.stringify(structure)}
+            if (structure.fields.length) {
+                for (var i = 0; i < structure.fields.length; i++) {
+                    var name = Object.keys(structure.fields[i])[0];
+                    if (structure.fields[i][name]["type"] == 'point' || structure.fields[i][name]["type"] == 'line' || structure.fields[i][name]["type"] == 'polygon') {
+                        console.log(name);
+                        geographicType = name;
+                    }
+                }
+            }
+
+            var features = [];
+
+            var dataset = !{JSON.stringify(dataset)}
+            for (var i = 0; i < dataset.length; i++) {
+                console.log(dataset[i][geographicType]);
+                features.push(JSON.parse(dataset[i][geographicType]));
+            }
+
+            $scope.geojson.data = turf.featurecollection(features);
+        }]);
+
+        var geographicName = '';
+        var structure = !{JSON.stringify(structure)}
+        if (structure.fields.length) {
+            for (var i = 0; i < structure.fields.length; i++) {
+                var name = Object.keys(structure.fields[i])[0];
+                switch (structure.fields[i][name]["type"]) {
+                    case "point":
+                        my_map_draw(name, "point");
+                        geographicName = name;
+                        break;
+                    case "line":
+                        my_map_draw(name, "line");
+                        geographicName = name;
+                        break;
+                    case "polygon":
+                        my_map_draw(name, "polygon");
+                        geographicName = name;
+                        break;
+                }
+            }
+        }
+
+        function my_map_draw(id, type) {
+            var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib}),
+                    map = new L.Map(id, {layers: [osm], center: new L.LatLng(#{structure.center.lat},#{structure.center.lng}), zoom: #{structure.center.zoom}});
+            var drawnItems = new L.FeatureGroup();
+            map.addLayer(drawnItems);
+
+            switch (type) {
+                case "point":
+                    map.addControl(new L.Control.Draw({
+                        position: 'topright',
+                        draw: {
+                            polyline: false,
+                            polygon: false,
+                            rectangle: false,
+                            circle: false,
+                            marker: true
+                        },
+                        edit: {featureGroup: drawnItems}
+                    }));
+                    break;
+                case "line":
+                    map.addControl(new L.Control.Draw({
+                        position: 'topright',
+                        draw: {
+                            polyline: true,
+                            polygon: false,
+                            rectangle: false,
+                            circle: false,
+                            marker: false
+                        },
+                        edit: {featureGroup: drawnItems}
+                    }));
+                    break;
+                case "polygon":
+                    map.addControl(new L.Control.Draw({
+                        position: 'topright',
+                        draw: {
+                            polyline: false,
+                            polygon: true,
+                            rectangle: false,
+                            circle: false,
+                            marker: false
+                        },
+                        edit: {featureGroup: drawnItems}
+                    }));
+                    break;
+            }
+
+            map.on('draw:created', function (event) {
+                var layer = event.layer;
+                if (drawnItems && drawnItems.getLayers().length !== 0) {
+                    drawnItems.clearLayers();
+                }
+                drawnItems.addLayer(layer);
+                document.getElementById(geographicName+'Label').value = JSON.stringify(layer.toGeoJSON());
+
+            });
+        }
+
+
+block content
+    // Start content
+    .content
+        .container
+            // Page-Title
+            .row
+                .col-sm-12
+                    leaflet(defaults='defaults', geojson="geojson", lf-center='center', width='100%', height='480px')
+            .row
+                .col-sm-12
+                    h4.page-title Structure List #{title}
+                    .panel
+                        .panel-body
+                            if dataset.length
+                                table
+                                    thead
+                                        tr
+                                            th #
+                                            each value, key in dataset[0]
+                                                th= key
+                                            th Actions
+                                    tbody
+                                        each item, i in dataset
+                                            tr
+                                                td= i + 1
+                                                each value in item
+                                                    td= value
+                                                td.actions
+                                                    a.btn.btn-grey.waves-effect.waves-light.w-xs.m-b-5(href='/datasets/#{title}/#{item._id}',role='button') Edit
+                                                    a.btn.btn-purple.waves-effect.waves-light.w-xs.m-b-5(href='/datasets/#{title}/#{item._id}/delete', role='button') Remove
+                            else
+                                p Dataset is empty
+
+
+                .row
+                    .col-sm-10
+                        h4.page-title Add some row
+                        .panel.panel-default
+                            .panel-heading
+                                h3.panel-title Add Row
+                            .panel-body
+                                .form
+                                    form.cmxform.form-horizontal.tasi-form(method='post', action='/datasets/#{title}/add', enctype='multipart/form-data')
+                                        if structure.fields
+                                            each field in structure.fields
+                                                each value, key in field
+                                                    .form-group
+                                                        if value.required
+                                                            label.col-lg-10 #{key} (Required)
+                                                        else
+                                                            label.col-lg-10 #{key} (Not required)
+                                                        .col-lg-10
+                                                            if value.type == 'text'
+                                                                input.form-control(name='#{key}', type='text', require='')
+                                                            if value.type == 'number'
+                                                                input.form-control(name='#{key}', type='number', require='')
+                                                            if value.type == 'url'
+                                                                input.form-control(name='#{key}', type='url', require='')
+                                                            if value.type == 'file'
+                                                                input.form-control(name='#{key}', type='file', require='')
+                                                            if value.type == 'point' || value.type == 'line' || value.type == 'polygon'
+                                                                input.form-control(id='#{key}Label', name='#{key}', type='text', require='')
+                                                                .col-sm-10
+                                                                    div(id='#{key}', style='width: 800px; height:800px; border: 1px solid #ccc')
+
+                                        .col-lg-offset-2.col-lg-10
+                                            input.btn.btn-default(name='submit', type='submit', value='Add Row')
+

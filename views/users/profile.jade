@@ -1,0 +1,288 @@
+//
+   Created by agescura on 4/11/15.
+
+extends ../layout
+
+block content
+    // Start content
+    .content
+      .wraper.container-fluid
+        .row
+          .col-sm-12
+            .bg-picture.text-center(style="background-image:url('images/big/bg.jpg')")
+              .bg-picture-overlay
+              .profile-info-name
+                img.thumb-lg.img-circle.img-thumbnail(src='/uploads/#{user.profileimage}', alt='profile-image')
+                h3.text-white John Deon
+            // / meta
+        .row.user-tabs
+          .col-lg-6.col-md-9.col-sm-9
+            ul.nav.nav-tabs.tabs
+              li.active.tab
+                a.active(href='#home-2', data-toggle='tab', aria-expanded='false')
+                  span.visible-xs
+                    i.fa.fa-home
+                  span.hidden-xs About Me
+              li.tab
+                a(href='#profile-2', data-toggle='tab', aria-expanded='false')
+                  span.visible-xs
+                    i.fa.fa-user
+                  span.hidden-xs Activities
+              li.tab
+                a(href='#messages-2', data-toggle='tab', aria-expanded='true')
+                  span.visible-xs
+                    i.fa.fa-envelope-o
+                  span.hidden-xs Projects
+              li.tab
+                a(href='#settings-2', data-toggle='tab', aria-expanded='false')
+                  span.visible-xs
+                    i.fa.fa-cog
+                  span.hidden-xs Settings
+              .indicator
+          .col-lg-6.col-md-3.col-sm-3.hidden-xs
+            .pull-right
+              .dropdown
+                a.dropdown-toggle.btn-rounded.btn.btn-primary.waves-effect.waves-light(data-toggle='dropdown', href='#')
+                  | Following
+                  span.caret
+                ul.dropdown-menu.dropdown-menu-right(role='menu')
+                  li
+                    a(href='#') Poke
+                  li
+                    a(href='#') Private message
+                  li.divider
+                  li
+                    a(href='#') Unfollow
+        .row
+          .col-lg-12
+            .tab-content.profile-tab-content
+              #home-2.tab-pane.active
+                .row
+                  .col-md-4
+                    // Personal-Information
+                    .panel.panel-default.panel-fill
+                      .panel-heading
+                        h3.panel-title Personal Information
+                      .panel-body
+                        .about-info-p
+                          strong Full Name
+                          br
+                          p.text-muted #{user.name}
+                        .about-info-p
+                          strong Mobile
+                          br
+                          p.text-muted (123) 123 1234
+                        .about-info-p
+                          strong Email
+                          br
+                          p.text-muted johnathandeon @moltran.com
+                        .about-info-p.m-b-0
+                          strong Location
+                          br
+                          p.text-muted USA
+                    // Personal-Information
+                    // Languages
+                    .panel.panel-default.panel-fill
+                      .panel-heading
+                        h3.panel-title Languages
+                      .panel-body
+                        ul
+                          li English
+                          li Franch
+                          li Greek
+                    // Languages
+                  .col-md-8
+                    // Personal-Information
+                    .panel.panel-default.panel-fill
+                      .panel-heading
+                        h3.panel-title Biography
+                      .panel-body
+                        p
+                          | Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+                        p
+                          strong But also the leap into electronic typesetting, remaining essentially unchanged.
+                        p
+                          | It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                    // Personal-Information
+                    .panel.panel-default.panel-fill
+                      .panel-heading
+                        h3.panel-title Skills
+                      .panel-body
+                        .m-b-15
+                          h5
+                            | Angular Js
+                            span.pull-right 60%
+                          .progress
+                            .progress-bar.progress-bar-primary.wow.animated.progress-animated(role='progressbar', aria-valuenow='60', aria-valuemin='0', aria-valuemax='100', style='width: 60%;')
+                              span.sr-only 60% Complete
+                        .m-b-15
+                          h5
+                            | Javascript
+                            span.pull-right 90%
+                          .progress
+                            .progress-bar.progress-bar-pink.wow.animated.progress-animated(role='progressbar', aria-valuenow='90', aria-valuemin='0', aria-valuemax='100', style='width: 90%;')
+                              span.sr-only 90% Complete
+                        .m-b-15
+                          h5
+                            | Wordpress
+                            span.pull-right 80%
+                          .progress
+                            .progress-bar.progress-bar-purple.wow.animated.progress-animated(role='progressbar', aria-valuenow='80', aria-valuemin='0', aria-valuemax='100', style='width: 80%;')
+                              span.sr-only 80% Complete
+                        .m-b-0
+                          h5
+                            | HTML5 & CSS3
+                            span.pull-right 95%
+                          .progress
+                            .progress-bar.progress-bar-info.wow.animated.progress-animated(role='progressbar', aria-valuenow='95', aria-valuemin='0', aria-valuemax='100', style='width: 95%;')
+                              span.sr-only 95% Complete
+              #profile-2.tab-pane
+                // Personal-Information
+                .panel.panel-default.panel-fill
+                  .panel-body
+                    .timeline-2
+                      .time-item
+                        .item-info
+                          .text-muted 5 minutes ago
+                          p
+                            strong
+                              a.text-info(href='#') John Doe
+                            |  Uploaded a photo
+                            strong "DSC000586.jpg"
+                      .time-item
+                        .item-info
+                          .text-muted 30 minutes ago
+                          p
+                            a.text-info(href='') Lorem
+                            |  commented your post.
+                          p
+                            em
+                              | "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam laoreet tellus ut tincidunt euismod. "
+                      .time-item
+                        .item-info
+                          .text-muted 59 minutes ago
+                          p
+                            a.text-info(href='') Jessi
+                            |  attended a meeting with
+                            a.text-success(href='#') John Doe
+                            | .
+                          p
+                            em
+                              | "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam laoreet tellus ut tincidunt euismod. "
+                      .time-item
+                        .item-info
+                          .text-muted 5 minutes ago
+                          p
+                            strong
+                              a.text-info(href='#') John Doe
+                            | Uploaded 2 new photos
+                      .time-item
+                        .item-info
+                          .text-muted 30 minutes ago
+                          p
+                            a.text-info(href='') Lorem
+                            |  commented your post.
+                          p
+                            em
+                              | "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam laoreet tellus ut tincidunt euismod. "
+                      .time-item
+                        .item-info
+                          .text-muted 59 minutes ago
+                          p
+                            a.text-info(href='') Jessi
+                            |  attended a meeting with
+                            a.text-success(href='#') John Doe
+                            | .
+                          p
+                            em
+                              | "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam laoreet tellus ut tincidunt euismod. "
+                // Personal-Information
+              #messages-2.tab-pane
+                // Personal-Information
+                .panel.panel-default.panel-fill
+                  .panel-heading
+                    h3.panel-title My Projects
+                  .panel-body
+                    .table-responsive
+                      table.table
+                        thead
+                          tr
+                            th #
+                            th Project Name
+                            th Start Date
+                            th Due Date
+                            th Status
+                            th Assign
+                        tbody
+                          tr
+                            td 1
+                            td Moltran Admin
+                            td 01/01/2015
+                            td 07/05/2015
+                            td
+                              span.label.label-info Work in Progress
+                            td Coderthemes
+                          tr
+                            td 2
+                            td Moltran Frontend
+                            td 01/01/2015
+                            td 07/05/2015
+                            td
+                              span.label.label-success Pending
+                            td Coderthemes
+                          tr
+                            td 3
+                            td Moltran Admin
+                            td 01/01/2015
+                            td 07/05/2015
+                            td
+                              span.label.label-pink Done
+                            td Coderthemes
+                          tr
+                            td 4
+                            td Moltran Frontend
+                            td 01/01/2015
+                            td 07/05/2015
+                            td
+                              span.label.label-purple Work in Progress
+                            td Coderthemes
+                          tr
+                            td 5
+                            td Moltran Admin
+                            td 01/01/2015
+                            td 07/05/2015
+                            td
+                              span.label.label-warning Coming soon
+                            td Coderthemes
+                // Personal-Information
+              #settings-2.tab-pane
+                // Personal-Information
+                .panel.panel-default.panel-fill
+                  .panel-heading
+                    h3.panel-title Edit Profile
+                  .panel-body
+                    form(role='form')
+                      .form-group
+                        label(for='FullName') Full Name
+                        input#FullName.form-control(type='text', value='John Doe')
+                      .form-group
+                        label(for='Email') Email
+                        input#Email.form-control(type='email', value='first.last@example.com')
+                      .form-group
+                        label(for='Username') Username
+                        input#Username.form-control(type='text', value='john')
+                      .form-group
+                        label(for='Password') Password
+                        input#Password.form-control(type='password', placeholder='6 - 15 Characters')
+                      .form-group
+                        label(for='RePassword') Re-Password
+                        input#RePassword.form-control(type='password', placeholder='6 - 15 Characters')
+                      .form-group
+                        label(for='AboutMe') About Me
+                        textarea#AboutMe.form-control(style='height: 125px;')
+                          | Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+                      button.btn.btn-primary.waves-effect.waves-light.w-md(type='submit') Save
+                // Personal-Information
+      // container
+    // content
+

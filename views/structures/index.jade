@@ -1,0 +1,83 @@
+//
+   Created by agescura on 4/11/15.
+
+extends ../layout
+
+block css
+    link(rel='stylesheet', href='/assets/magnific-popup/magnific-popup.css')
+    link(rel='stylesheet', href='/assets/jquery-datatables-editable/datatables.css')
+    link(rel='stylesheet', href='/bower_components/leaflet/dist/leaflet.css')
+
+block js
+    script(src='/assets/magnific-popup/magnific-popup.js')
+    script(src='/assets/jquery-datatables-editable/jquery.dataTables.js')
+    script(src='/assets/datatables/dataTables.bootstrap.js')
+    script(src='/assets/jquery-datatables-editable/datatables.editable.init.js')
+    script(src='/bower_components/angular/angular.min.js')
+    script(src='/bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js')
+    script(src='/bower_components/leaflet/dist/leaflet.js')
+    script(src='/javascripts/app.js')
+
+block content
+    // Start content
+    .content
+      .container
+        // Page-Title
+        .row
+          .col-sm-12
+            h4.page-title Structure List
+            .panel
+              .panel-body
+                if structures
+                    table#datatable-editable.table.table-bordered.table-striped
+                      thead
+                        tr
+                          th Name
+                          th Description
+                          th Contact
+                          th Actions
+                      tbody
+                        each structure in structures
+                            tr.gradeX
+                              td #{structure.name}
+                              td #{structure.description}
+                              td #{structure.contact}
+                              td.actions
+                                a.btn.btn-purple.waves-effect.waves-light.w-xs.m-b-5(href='/structures/#{structure.name}', role='button') Structure
+                                a.btn.btn-purple.waves-effect.waves-light.w-xs.m-b-5(href='/datasets/#{structure.name}', role='button') Dataset
+                else
+                    h4 There are no structures
+        .row
+            .col-sm-6
+                .panel.panel-default
+                    .panel-heading
+                        h3.panel-title Add New Structure
+                    .panel-body
+                        .form
+                            form.cmxform.form-horizontal.tasi-form(method='post', action='/structures/create', enctype='multipart/form-data')
+                                .form-group
+                                    label.col-lg-10 Name (required)
+                                    .col-lg-10
+                                        input.form-control(name='name', type='text', require='')
+                                .form-group
+                                    label.col-lg-10 Contact (required)
+                                    .col-lg-10
+                                        input.form-control(name='contact', type='text', require='')
+                                .form-group
+                                    label.col-lg-10 Description (optional)
+                                        input.form-control(name='description', type='text')
+                                .form-group
+                                    label.col-lg-10 Center Location (optional)
+                                        input.form-control(name='lat'  type='number', step='any', ng-model='london.lat')
+                                        input.form-control(name='lng'  type='number', step='any', ng-model='london.lng')
+                                        input.form-control(name='zoom' type='number', step='any', ng-model='london.zoom')
+                                .form-group
+                                    .col-lg-offset-2.col-lg-10
+                                        input.btn.btn-default(name='submit', type='submit', value='Create Dataset')
+            .col-sm-6
+                .panel.panel-default
+                    .panel-heading
+                        h3.panel-title Center focus mapView
+                        leaflet(lf-center='london', width='100%', height='480px')
+
+
